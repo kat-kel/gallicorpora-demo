@@ -5,6 +5,7 @@ arks=$1
 
 # créer un environnement virtuel
 python3 -m venv venv-demo
+source venv-demo/bin/activate
 
 # installer des librairies python exigées
 echo "En cours d'installer des librairies."
