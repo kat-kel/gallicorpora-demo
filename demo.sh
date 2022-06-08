@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Path to list of ARKs
+# chemin vers une liste des ARKs
 arks=$1
 
 # créer un environnement virtuel
@@ -9,24 +9,25 @@ source venv-demo/bin/activate
 
 # installer des librairies python exigées
 echo "En cours d'installer des librairies."
-pip install kraken
-kraken get 10.5281/zenodo.5617783
+pip install --upgrade pip
+pip install kraken==3.0.13
 
 # télécharger en locale les pages de chaque document dont l'ARK se trouve dans la liste './arks'
-bash src/download_images.sh $arks
+#bash src/download_images.sh $arks
 
-# pre-processing des images
-for i in img/*;
+# semgentation et ocrisation des images
+for dos in img/*;
 do
-    doc=`basename "$i"`
-    echo "En cours de parcourir dans $i"
+    docname=`basename "$dos"`
+    echo "En cours de parcourir dans $dos"
 
-    # binarize images
-    kraken -I "$i/*" -o .png binarize
-    mkdir -p ./data/$doc/bin; mv $i/*png ./data/$doc/bin/
+    cd "./img/$docname"
 
-    # segment images
-    kraken -I "./data/$doc/bin/*.png" -o .json segment
-    mkdir -p ./data/$doc/seg; mv ./data/$doc/bin/*json ./data/$doc/seg/
+    # segmenter et ocriser toutes les images dans le dossier du document == $dos
+    kraken --alto --suffix ".xml" -I "*.jpg" -f image segment -i ../../models/lineandregionscomplexefinetune__49.mlmodel ocr -m ../../models/modelBaseline_best.mlmodel
+    # ranger les données XML dans un dossier data/
+    mkdir -p ../../data/$docname/; mv *xml ../../data/$docname/
+
     echo ""
+    cd -
 done

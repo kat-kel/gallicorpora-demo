@@ -8,6 +8,7 @@
 1. Lister les ARK des sources de Gallica à traiter dans le fichier `/arks`. Séparer les valeurs par une saute de ligne.
 
 2. Lancer le script en précisant la liste des ARKs (`arks`).
+
 `$ bash demo.sh arks`
 
 ## Résultats
