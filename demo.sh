@@ -11,6 +11,7 @@ source venv-demo/bin/activate
 echo "En cours d'installer des librairies."
 pip install --upgrade pip
 pip install kraken==3.0.13
+pip install protobuf==3.19.0
 
 # télécharger en locale les pages de chaque document dont l'ARK se trouve dans la liste './arks'
 bash src/download_images.sh $arks
