@@ -12,4 +12,4 @@
 `$ bash demo.sh arks`
 
 ## Résultats
-La démo va créer un dossier `img/` dans lequel se trouveront les images de chaque document. Elle créera en suite le dossier `data/` dans lesquel les functions de l'engine HTR, kraken, mettront les fichiers .png et .json.
+La démo va créer un dossier `img/` dans lequel se trouveront les images de chaque document. Elle créera en suite le dossier `data/` dans lesquel les modèles de segmentation et de HTR vont créer des fichiers XML-ALTO.
