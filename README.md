@@ -45,6 +45,10 @@ Le modèle de segmentation recommandé est `lineandregionscomplexefinetune__49.m
 La démo va créer un dossier `img/` dans lequel se trouveront les images de chaque document. Elle créera en suite le dossier `data/` dans lesquel les modèles de segmentation et de HTR vont créer des fichiers XML-ALTO.
 
 ## Relancer la démo
-Pour refaire une partie ou la totalité de la démonstration, appeler la commande `prep_demo.sh` et précise quel étape vous voulez recommencer.
+Pour refaire une partie ou la totalité de la démonstration, appeler la commande `prep_demo.sh`. Il va vous demander une réponse pour lui dira pour quel étape (1, 2, ou 3) il va recréer les conditions nécessaires.
 
 `$ bash prep_demo.sh`
+
+Étape 1 -- Télécharger les images de Gallica
+Étape 2 -- Transcrire les images
+Étape 3 -- Convertir les transcriptions d'ALTO en TEI
