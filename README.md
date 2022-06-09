@@ -1,4 +1,6 @@
-# Demostration of Gallic(orpor)a's pipeline (français en bas)
+- - -
+# Demostration of Gallic(orpor)a's pipeline 
+(*français en bas*)
 
 ## Requirements
 - install : python 3
@@ -55,9 +57,11 @@ Step 2 -- Transcribe the images
 
 Step 3 -- Convert the XML-ALTO files to an XML-TEI document.
 
+- - -
+- - -
 
-
-# Démonstration du pipeline du projet Gallic(orpor)a (english above)
+# Démonstration du pipeline du projet Gallic(orpor)a 
+(*english above*)
 
 ## Conditions
 - installé : python 3
