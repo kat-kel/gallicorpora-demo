@@ -6,9 +6,12 @@
 - système d'opération : Linux, Mac
 
 ## Utilisation
-0. Pour être en toute sécurité, c'est bien de lancer ces commandes dans un environnement virtuel.
+0. Depuis un endroit préféré (ex. Desktop), télécharger cette démonstration sur votre ordinateur et, pour être en toute sécurité, créer un environnement virtuel.
 
 ```
+$ git clone https://github.com/kat-kel/gallicorpora-demo.git
+$ cd gallicorpora-demo
+
 $ python3 -m venv .env-demo
 $ source .env-demo/bin/activate
 ```
