@@ -1,33 +1,33 @@
 #!/bin/sh
 
-echo Sélectionner auquel stade à commencer : 1, 2, ou 3
-echo 1 - télécharger les images de Gallica
-echo 2 - transcrire les images avec les modèles
-echo 3 - transformer les transcriptions en TEI
-read -p "Entrer le nombre du stade : " stage
+echo Select which step you\'d like to start with : 1, 2, ou 3
+echo 1 - download images from Gallica
+echo 2 - transcribe the images
+echo 3 - convert the XML-ALTO transcriptions to an XML-TEI document
+read -p "Enter the step's number: " stage
 
 if [ "$stage" = "1" ];
 then
-echo Supprimer les environnements
+echo Delete virtual environments
 rm -r venv-*
-echo Supprimer le dossier des images
+echo Delete images
 rm -r img/
-echo Supprimer le dossier des XML
+echo Delete the XML files
 rm -r data/
 fi;
 
 if [ "$stage" = "2" ];
 then 
-echo Supprimer les environnements
+echo Delete virtual environments
 rm -r venv-*
-echo Supprimer le dossier des XML
+echo Delete the XML files
 rm -r data/
 fi;
 
 if [ "$stage" = "3" ];
 then
-echo Supprimer les environnements
+echo Delete virtual environments
 rm -r venv-*
-echo Supprimer les fichiers XML-TEI
+echo Delete XML-TEI files
 rm data/b*.xml
 fi;

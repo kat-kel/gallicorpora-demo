@@ -3,6 +3,7 @@
 python3 -m venv venv-download_images
 
 source venv-download_images/bin/activate
+# install necessary python packages
 pip install --upgrade pip
 pip install -r src/download_requirements.txt
 
