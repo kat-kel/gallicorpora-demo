@@ -50,5 +50,7 @@ Pour refaire une partie ou la totalité de la démonstration, appeler la command
 `$ bash prep_demo.sh`
 
 Étape 1 -- Télécharger les images de Gallica
+
 Étape 2 -- Transcrire les images
+
 Étape 3 -- Convertir les transcriptions d'ALTO en TEI
