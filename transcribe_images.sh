@@ -1,20 +1,17 @@
 #!/bin/sh
 
 # chemin vers une liste des ARKs
-arks=$1
+segment_model=$1
+htr_model=$2
 
 # créer un environnement virtuel
-python3 -m venv venv-demo
-source venv-demo/bin/activate
+python3 -m venv venv-transcribe
+source venv-transcribe/bin/activate
 
 # installer des librairies python exigées
 echo "En cours d'installer des librairies."
 pip install --upgrade pip
-pip install kraken==3.0.13
-pip install protobuf==3.19.0
-
-# télécharger en locale les pages de chaque document dont l'ARK se trouve dans la liste './arks'
-bash src/download_images.sh $arks
+pip install -r src/transcribe_requirements.txt
 
 # semgentation et ocrisation des images
 for dos in img/*;
@@ -22,13 +19,18 @@ do
     docname=`basename "$dos"`
     echo "En cours de parcourir dans $dos"
 
-    cd "./img/$docname"
+    cd "img/$docname"
 
     # segmenter et ocriser toutes les images dans le dossier du document == $dos
-    kraken --alto --suffix ".xml" -I "*.jpg" -f image segment -i ../../models/lineandregionscomplexefinetune__49.mlmodel -bl ocr -m ../../models/modelBaseline_best.mlmodel
+    # segment model == lineandregionscomplexefinetune__49.mlmodel
+    # htr model == modelBaseline_best.mlmodel
+    kraken --alto --suffix ".xml" -I "*.jpg" -f image segment -i "../../$segment_model" -bl ocr -m "../../$htr_model"
+
     # ranger les données XML dans un dossier data/
     mkdir -p ../../data/$docname/; mv *xml ../../data/$docname/
 
     echo ""
     cd -
 done
+
+deactivate
