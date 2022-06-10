@@ -1,2 +1,0 @@
-kraken==3.0.13
-protobuf==3.19.0
