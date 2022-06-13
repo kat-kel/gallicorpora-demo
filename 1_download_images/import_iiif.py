@@ -27,6 +27,7 @@ parser.add_argument('-m', '--manifest', type=str, default='manifest.json', help=
 parser.add_argument('-l', '--limit', type=int, default=None)
 parser.add_argument('-q', '--quality', type=str, default='full')
 parser.add_argument('-v', '--verbose', action="store_true")
+parser.add_argument('-e', '--export_location', type=str, default='downloads')
 args = parser.parse_args()
 
 # Specify in the terminal the arguments you need to complete the manifest's url
@@ -58,12 +59,12 @@ for i, canvas in enumerate(canvases[:args.limit]):
             identifier_name = ''.join(args.identifier.replace('/', '_'))
         else:
             identifier_name = ''.join(args.identifier)
-        path = os.path.join('downloads', identifier_name)
+        path = os.path.join(args.export_location, identifier_name)
         try:
-            if os.path.isdir('downloads'):
+            if os.path.isdir(args.export_location):
                 os.mkdir(path)
             else:
-                os.mkdir('downloads')
+                os.mkdir(args.export_location)
                 os.mkdir(path)
 
         except OSError:

@@ -9,14 +9,14 @@ echo -e "${bold}| Preparing the Gallic(orpor)a Project Pipeline |${reset}"
 echo -e "${bold} ----------------------------------------------- ${reset}"
 echo ""
 
-if [[ -d "models" ]];
+if [ -d "models" ]
 then
     rm -r "models"
 fi
 mkdir models
 
 echo -e "${inverted}Installing requirements...${reset}"
-if [[ -d ".venvs" ]];
+if [ -d ".venvs" ]
 then
     rm -r ".venvs"
 fi
@@ -30,15 +30,15 @@ pip install -r reqs/download_requirements.txt
 deactivate
 
 echo -e "\n${inverted}... for transcribing images with ML models.${reset}"
-python3 -m venv .venvs/download-images
-source .venvs/download-images/bin/activate
+python3 -m venv .venvs/transcribe-images
+source .venvs/transcribe-images/bin/activate
 pip install --upgrade pip
 pip install -r reqs/transcribe_requirements.txt
 deactivate
 
 echo -e "\n${inverted}... for converting ALTO XML files to TEI XML.${reset}"
-python3 -m venv .venvs/download-images
-source .venvs/download-images/bin/activate
+python3 -m venv .venvs/alto2tei
+source .venvs/alto2tei/bin/activate
 pip install --upgrade pip
 pip install -r reqs/alto2tei_requirements.txt
 deactivate
