@@ -12,7 +12,6 @@ git clone https://github.com/kat-kel/gallicorpora-demo.git
 2. Move into this repository (go to the dev branch), and install the necessary libraries and ML models.
 ```
 cd gallicorpora-demo
-git branch -f dev origin/dev
 bash install.sh
 ```
 3. Create a list of documents on Gallica you would like to process.
