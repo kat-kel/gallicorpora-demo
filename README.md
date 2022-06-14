@@ -9,7 +9,7 @@
 ```
 git clone https://github.com/kat-kel/gallicorpora-demo.git
 ```
-2. Move into this repository (go to the dev branch), and install the necessary libraries and ML models.
+2. Move into this repository and install the necessary libraries and ML models.
 ```
 cd gallicorpora-demo
 bash install.sh
