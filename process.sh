@@ -15,7 +15,7 @@ yellow="\033[43m"
 
 clear
 echo -e " ._______________________________________________."
-echo -e " | ${bold}Preparing the Gallic(orpor)a Project Pipeline${reset} |"
+echo -e " | ${bold}Launching the Gallic(orpor)a Project Pipeline${reset} |"
 echo -e " ^-----------------------------------------------^"
 echo ""
 
