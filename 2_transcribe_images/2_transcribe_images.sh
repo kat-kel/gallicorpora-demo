@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo -e "${inverted}Phase 2. Segment and transcribe digitized images.${reset}"
-
 # List of which models are for which type of document.
 # 17th-century French
 SEG17=../../models/17seg_appenzeller.mlmodel
@@ -13,6 +11,8 @@ bold='\033[1m'
 reset='\033[0m'
 inverted="\033[7m"
 red="\033[31m"
+
+echo -e "\n${inverted}Phase 2. Segment and transcribe digitized images.${reset}"
 
 # Check that the images are downloaded.
 if ! [ -d 'img' ]

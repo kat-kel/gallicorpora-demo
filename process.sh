@@ -12,10 +12,10 @@ echo -e "${bold} ----------------------------------------------- ${reset}"
 echo ""
 
 # 1. Download images from Gallica
-#bash 1_download_images/1_download_images.sh
+bash 1_download_images/1_download_images.sh
 
 # 2. Transcribe images
-#bash 2_transcribe_images/2_transcribe_images.sh
+bash 2_transcribe_images/2_transcribe_images.sh
 
 # 3. Convert to TEI
 bash 3_alto2tei/3_alto2tei.sh

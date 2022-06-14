@@ -66,6 +66,7 @@ do
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
 		LIMIT_OPTION=""
+		echo ""
 		echo -e "You have selected to download the entire document. This will likely take several minutes."
 	else
 		echo ""
