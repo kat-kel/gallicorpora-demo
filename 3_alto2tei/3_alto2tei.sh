@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# -----------------------------------------------------------
+# Code by: Kelly Christensen
+# Bash script to convert ALTO XML files to a TEI XML document.
+# -----------------------------------------------------------
+
 # Color codes for console messages.
 bold='\033[1m'
 reset='\033[0m'
@@ -38,6 +43,8 @@ if [ -d ".venvs/${ENV}" ]
 fi
 source ".venvs/${ENV}/bin/activate"
 
+# Run the application alto2tei.
 python 3_alto2tei/run.py
 
+# Deactivate the virtual environment for creating the TEI document.
 deactivate
