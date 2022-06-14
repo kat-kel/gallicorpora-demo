@@ -14,11 +14,9 @@ green="\033[42m"
 yellow="\033[43m"
 
 clear
-echo -e "${green}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${green}"
 echo -e " ._______________________________________________."
 echo -e " | ${bold}Preparing the Gallic(orpor)a Project Pipeline${reset} |"
 echo -e " ^-----------------------------------------------^"
-echo -e "${green}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${green}"
 echo ""
 
 # 1. Download images from Gallica
