@@ -28,7 +28,22 @@ For this demonstration, please use the list of arks downloaded with this reposit
 ```
 bash process.sh
 ```
-You will be prompted to respond to two types of questions.
 
-- Where is the list of ARKs? In response, simply enter: `arks`
-- How much of each document listed in `arks` do you want to download? You can either respond `y`, meaning download all of the document, or `n` for no, do not download all of the document. The second is advisable since it takes less time and computing energy. If you want to download only a portion of a document, you will be asked to specify how many pages by entering a number. A recommended number for this demonstration is `10`.
+---
+### During the process, in phase 1 (Download images from Gallica), you will be asked to respond to two types of questions.
+
+1. Where can the program find the list of ARKs you'd like it to read?
+```
+Enter the path to the text file: 
+```
+For this demonstration, simply enter: "arks"
+
+2. How much of each document listed in `arks` do you want to download and process?
+```
+Do you want to download all of the document? [y/n]
+```
+Because it takes less time and computing power, it is recommended for this demonstration that you reply "n". This answer will prompt a follow-up question.
+```
+How many images do you want to download?
+```
+You should reply with a number, such as "10".
