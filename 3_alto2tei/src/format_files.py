@@ -13,5 +13,5 @@ class Files:
 
     def order_files(self):
         File = namedtuple("File", ["num", "filepath"])
-        ordered_files = sorted([File(int(re.search(r"(.*f)(\d+)", f.name).group(2)), f)for f in self.fl])
+        ordered_files = sorted([File(int(re.search(r"(\d+)", f.name).group(0)), f)for f in self.fl])
         return ordered_files

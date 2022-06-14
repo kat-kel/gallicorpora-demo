@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Color codes for console messages.
 bold='\033[1m'
 reset='\033[0m'
 inverted="\033[7m"
@@ -12,6 +13,11 @@ if [ -d "img" ]
 	rm -r img
 fi
 mkdir img
+
+if [ -d "data" ]
+	then
+	rm -r data
+fi
 
 # Check that the virtual environment is installed correctly.
 ENV=download-images
@@ -54,19 +60,22 @@ read -p "Enter the path to that text file: " ARKS
 # gather the images from Gallica
 for ARK in `cat $ARKS`; 
 do 
-    echo -e "\n${inverted}Gathering images from document with ARK $ARK.${reset}"
+    echo -e "${inverted}Gathering images from document with ARK $ARK.${reset}"
+	echo ""
 	read -p "Do you want to download all of the document? [y/n]" -n 1 -r
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
 		LIMIT_OPTION=""
-		echo -e "Downloading the entire document. This might take some time."
+		echo -e "You have selected to download the entire document. This will likely take several minutes."
 	else
+		echo ""
 		read -p "How many images do you want to download? " LIMIT
 		LIMIT_OPTION="-l ${LIMIT}"
 	fi
 		STARTTIME=$(date +%s)
     	# script from https://github.com/carolinecorbieres/Memoire_TNAH/tree/master/2_Workflow/1_ImportCatalogues
 		# modified to specify new export location
+		echo -e "\nDownload in progress...\nCheck the document's folder in img/ to see new downloads arrive."
 		python 1_download_images/import_iiif.py ark:/12148/$ARK $LIMIT_OPTION -e img
 		ENDTIME=$(date +%s)
 		echo -e "\nFinished in $(($ENDTIME - $STARTTIME)) seconds."

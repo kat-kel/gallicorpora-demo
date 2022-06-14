@@ -1,5 +1,13 @@
 #!/bin/bash
 
+echo -e "${inverted}Phase 3. Convert transcribed ALTO XML files to a TEI XML document.${reset}"
+
+# Color codes for console messages.
+bold='\033[1m'
+reset='\033[0m'
+inverted="\033[7m"
+red="\033[31m"
+
 # Check that the virtual environment is installed correctly.
 ENV=alto2tei
 REQS=alto2tei_requirements.txt
@@ -23,6 +31,8 @@ if [ -d ".venvs/${ENV}" ]
 fi
 source ".venvs/${ENV}/bin/activate"
 
+
+echo -e "\n${inverted}Converting ALTO XML transcriptions into a TEI XML document.${reset}"
 python 3_alto2tei/run.py
 
 deactivate

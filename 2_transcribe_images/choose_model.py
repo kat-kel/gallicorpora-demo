@@ -38,5 +38,9 @@ if __name__ == "__main__":
     document = sys.argv[1:]
     response = request(document[0])
     data = clean(response)
-    print(data["Language"])
+    if data["Language"]:
+        century = data["Language"][:2].lower()
+    else:
+        century = "None"
+    print(century)
     print(data["Date"][:2])

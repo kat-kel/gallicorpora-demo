@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo -e "${inverted}Phase 2. Segment and transcribe digitized images.${reset}"
+
 # List of which models are for which type of document.
 # 17th-century French
 SEG17=../../models/17seg_appenzeller.mlmodel
@@ -59,20 +61,22 @@ do
 	# get information on the document's language and date from its IIIF manifest
     python 2_transcribe_images/choose_model.py $ARK > model_parameters.txt
 
-	# set variables
+	# set variables for this document
 	PARAMS=model_parameters.txt
 	LANGUAGE=$(head -n 1 ${PARAMS})
 	DATE=$(tail -n 1 ${PARAMS})
 
 	# run segmentation and transcription
-    if [[ $DATE == "15" ]]
+	# if the document is from the 17th century and is in French or the language is not defined
+	echo "Applying ML models for a 17th-century document, in French or in an undefined language."
+    if [[ $DATE == "16" && $LANGUAGE == "fr" || $LANGUAGE == "None" ]];
     then
-	cd img/$ARK
+	cd "img/$ARK"
     kraken --alto --suffix ".xml" -I "*.jpg" -f image segment -i $SEG17 -bl ocr -m $HTR17
-    fi
 	cd -
-	mkdir data/$ARK ; mv img/$ARK/*.xml data/$ARK
-	rm model_parameters
+    fi
+	mkdir "data/${ARK}" ; mv "img/${ARK}/"*"xml" "data/${ARK}/"
+	rm model_parameters.txt
 done
 
 deactivate

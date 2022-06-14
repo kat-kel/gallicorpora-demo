@@ -18,7 +18,7 @@ class DefaultTree:
         self.count = str(count_pages)
 
     def build(self):
-        with open("alto2tei/src/config.yml") as cf_file:
+        with open("3_alto2tei/src/config.yml") as cf_file:
             config = yaml.safe_load(cf_file.read())
 
         if self.sru["found"]:
