@@ -9,11 +9,16 @@
 bold='\033[1m'
 reset='\033[0m'
 inverted="\033[7m"
+red="\033[31m"
+green="\033[42m"
+yellow="\033[43m"
 
 clear
-echo -e "${bold} _______________________________________________ ${reset}"
-echo -e "${bold}| Preparing the Gallic(orpor)a Project Pipeline |${reset}"
-echo -e "${bold} ----------------------------------------------- ${reset}"
+echo -e "${yellow}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${yellow}"
+echo -e " ._______________________________________________."
+echo -e " | ${bold}Preparing the Gallic(orpor)a Project Pipeline${reset} |"
+echo -e " ^-----------------------------------------------^"
+echo -e "${yellow}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~${yellow}"
 echo ""
 
 # Reset everything in the directories for ML models and virtual environments.

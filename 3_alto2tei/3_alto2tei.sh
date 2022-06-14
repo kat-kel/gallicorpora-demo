@@ -10,6 +10,8 @@ bold='\033[1m'
 reset='\033[0m'
 inverted="\033[7m"
 red="\033[31m"
+green="\033[42m"
+yellow="\033[43m"
 
 echo -e "\n${inverted}Phase 3. Convert transcribed ALTO XML files to a TEI XML document.${reset}"
 
