@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# -----------------------------------------------------------
+# Code by: Kelly Christensen
+# Bash script to run 3 phases of Gallicorpora pipeline.
+# -----------------------------------------------------------
+
+# Color codes for console messages.
 bold='\033[1m'
 reset='\033[0m'
 inverted="\033[7m"

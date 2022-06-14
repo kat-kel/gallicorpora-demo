@@ -1,6 +1,14 @@
 #!/bin/bash
 
-# List of which models are for which type of document.
+# -----------------------------------------------------------
+# Code by: Kelly Christensen
+# Bash script to process images with segmentation and HTR models.
+# -----------------------------------------------------------
+
+# Set variables that determine which models are for which type of document.
+# The script will acccess these models from inside the directory img/<document>,
+# so the path to the model needs to return to the top directory via '../../'
+
 # 17th-century French
 SEG17=../../models/17seg_appenzeller.mlmodel
 # 17th-century Segmentation
@@ -44,39 +52,45 @@ if [ -d ".venvs/${ENV}" ]
 fi
 source ".venvs/${ENV}/bin/activate"
 
-# Create depository for transription data.
+# Clear out (if necessary) and create and a new directory for the transcribed pages.
 if [ -d "data" ]
 	then
 	rm -r data
 fi
 mkdir data
 
-# Get list of the documents whose images were downloaded.
+# Get a list of the documents whose images were downloaded.
 ARKS=`ls img/`
 
 # Check which language model to use for each document's HTR transcription.
 for ARK in $ARKS
 do
 	echo -e "\n${inverted}Segmenting and transcribing images from document ${ARK}.${reset}"
-	# get information on the document's language and date from its IIIF manifest
+
+	# Get information on the document's language and date from its IIIF manifest.
     python 2_transcribe_images/choose_model.py $ARK > model_parameters.txt
 
-	# set variables for this document
+	# Set variables for this document.
 	PARAMS=model_parameters.txt
 	LANGUAGE=$(head -n 1 ${PARAMS})
 	DATE=$(tail -n 1 ${PARAMS})
 
-	# run segmentation and transcription
-	# if the document is from the 17th century and is in French or the language is not defined
+	# Run segmentation and transcription.
+	### Document is from the 17th century and is in French or the language is not defined.
 	echo "Applying ML models for a 17th-century document, in French or in an undefined language."
     if [[ $DATE == "16" && $LANGUAGE == "fr" || $LANGUAGE == "None" ]];
     then
 	cd "img/$ARK"
     kraken --alto --suffix ".xml" -I "*.jpg" -f image segment -i $SEG17 -bl ocr -m $HTR17
 	cd -
+	### Other conditions for other types of models...
     fi
+
+	# Move the ALTO XML files to a subdirectory in 'data/' named after the document's ARK.
 	mkdir "data/${ARK}" ; mv "img/${ARK}/"*"xml" "data/${ARK}/"
+	# Delete the temporary file model_parameters.txt
 	rm model_parameters.txt
 done
 
+# Deactivate the virtual environment for transcription.
 deactivate
