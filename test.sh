@@ -128,7 +128,7 @@ Download_Models()
 }
 
 #####################################################################
-# Move Locally-installed Models
+# Copy Locally-installed Models
 #####################################################################
 No_Download()
 {
