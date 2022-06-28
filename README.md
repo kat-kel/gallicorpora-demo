@@ -2,7 +2,7 @@
 
 ## **What It Does**
 ___
-The Gallic(orpor)a Application downloads digital photographs of pages from a document on Gallica, transcribes them with Machine Learning models, and structures that transcribed data into a digital edition that conforms to the TEI (Text Encoding Initiative).
+The Gallic(orpor)a Application downloads digital images of pages from a document on Gallica, transcribes them with Machine Learning models, and structures that transcribed data into a digital edition that conforms to the TEI (Text Encoding Initiative).
 ### Step 1. Download Pages
 Every digital document on Gallica has a unique Archival Resource Key (ARK). The application reads a list of these keys, which the user provides (see `arks.txt`), and then downloads pages of those documents from the Bibliothèque nationale de France's servers.
 ### Step 2. Transcribe Pages
