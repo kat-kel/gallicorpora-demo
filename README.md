@@ -1,11 +1,25 @@
-# Gallic(orpor)a Pipeline
+# Gallic(orpor)a Application
 
+## **What It Does**
+___
+The Gallic(orpor)a Application downloads digital photographs of pages from a document on Gallica, transcribes them with Machine Learning models, and structures that transcribed data into a digital edition that conforms to the TEI (Text Encoding Initiative).
+### Step 1. Download Pages
+Every digital document on Gallica has a unique Archival Resource Key (ARK). The application reads a list of these keys, which the user provides (see `arks.txt`), and then downloads pages of those documents from the Bibliothèque nationale de France's servers.
+### Step 2. Transcribe Pages
+Researchers develop Machine Learning models that segment pages of text documents and predict the text on those pages. Researchers improve these models' efficacy by training them on limited data sets. For example, by training a text recognition model on French-language documents from the 17th century, that model will perform better on other French-language 17th-century documents than it will on Greek-language 4th-century documents. All segmentation and Handwritten Text Recognition (HTR) models are specialized in some way, depending on their training data.
+
+Through an automated process, this application applies segmentation and HTR models that best conform to the type of document being transcribed. It first assesses what would be the best type of segmentation and HTR models for a given document, based on that document's date of publication and language. The application then determines if anything it has installed matches those ideal models. To best take advantage of this application, the user should install it with segmentation and HTR models that are well suited to the type of documents whose Archival Resources Keys the user provides.
+
+These specialized models can be either public and downloaded from the internet via a URL (see `model_list.csv`), or models the user has available locally on their computer. During the installation process, the user specifies from where the application will install the models it will use. All models used by the application must conform to a strict file name syntax that allows the application to automatically determine which model to apply, depending on a document's language and date of publication.
+
+### Step 3. TEI Document
+Requiring no further input form the user, the application transforms the data which the segmentation and HTR models produced into a digital TEI edition. This digital edition can then be manipulated and published with such tools as TEI Publisher. 
+
+## **How to Use It**
+___
 ## Requirements
 - python 3.9
 - bash shell
----
----
-## How to Use
 ---
 ### Download the Application
 1. Clone this repository.
@@ -20,20 +34,19 @@ $ git branch -f dev origin/dev
 ---
 ### Set up the Application
 3. Install models and dependencies.
-- If you want to see the two ways of preparing Machine Learning models for the application, call the installation procedure with the option `-h` or `--help` for help.
-    ```
-    $ bash install.sh -h
-    ```
+
+There are 2 ways to install the Machine Learning models that this application needs.
+
 - **OPTION 1.** If you want to download Machine Learning models from an online repository (GitHub, Zenodo, HuggingFace, etc.), follow these two steps:
 
-    1. In the file `model_list.csv`, write the URL and some information about what the model does. That informaiton includes the training data's language, the training data's century, and model's task: segmentation (seg) or handwritten text recognition/ocr (htr). The URL needs to be the exact URL that triggers the model's download (not simply the page on which that URL can be accessed).
+    1. In the file `model_list.csv`, write the URL and some information about what the model does. That informaiton includes the training data's language, the training data's century, and the model's task: segmentation (seg) or handwritten text recognition/ocr (htr). The URL needs to be the exact URL that triggers the model's download (not simply the page on which that URL can be accessed).
 
         |language|century|job|url|
         |--------|-------|---|---|
         |fr|17|seg|https://github.com/...mlmodel|
         |fr|17|htr|https://github.com/...mlmodel|
 
-        *When you download this prototype,* `model_list.csv` *already has models listed for 17th-century French texts that you can use.*
+        *When you download this prototype,* `model_list.csv` *already has models listed for 17th-century French texts that are ready for you to use.*
 
     2. With the `model_list.csv` prepared, launch the installation with the option `-f` and the path to the CSV file.
         ```
@@ -42,7 +55,7 @@ $ git branch -f dev origin/dev
 
 - **OPTION 2.** If you have Machine Learning models installed on your local machine, follow these two steps:
 
-    1. Copy and/or rename the models according to the following syntax:
+    1. Copy and/or rename the models in a single directory according to the following syntax:
 
         |language|century|job|file extension|
         |--|--|--|--|
@@ -57,13 +70,13 @@ $ git branch -f dev origin/dev
         $ bash install.sh -d <DIRECTORY>
         ```
 
->Note: The prototype currently recognizes which model to apply to a document by parsing the digitized document's IIIF manifest and extracting the first two letters of the text's primary language, as it is registered in the manifest. This means that the prototype does not distinguish between different types of French, such as *moyen français* (frm) and *français moderne* (fra). Without standardization in how the IIIF manifest records a document's language, the prototype parses just the language's first two letters. If you are using your own models, (re)name a copy of the model where the first two characters are the first two letters of the language of the document's training data as that language would likely be written in a IIIF manifest.
+>Note: The prototype currently recognizes which model to apply to a document by parsing the digitized document's IIIF manifest and extracting the first two letters of the first language the manifest ascribes to the document. This means that the prototype does not distinguish between different types of French, such as *moyen français* (frm) and *français moderne* (fra). In both cases, that document's language would be represented in the file name as "fr".
 
 ---
 ### Run the Application
 4. Run the script `process.sh` with its required parameter `-f`.
 
-- In order to know which documents to download and transcribe, the application needs to read a text file. This file should have all the Archival Resource Keys (ARK) of each document recorded, each on a new line. The text file will resemble this:
+- In order to know which documents to download and to transcribe, the application needs to read a text file with a list of each document's Archival Resource Key (ARK). Each ARK should be on a new line in this simple text document, as seen in the following example:
 
     ```  
     bpt6k72609n
@@ -73,15 +86,20 @@ $ git branch -f dev origin/dev
     ```
     $ bash process.sh -f <FILE>
     ```
-    *When you download this prototype, the text file* `arks.txt` *already has Archival Resource Keys that you can use. Enter into the command line* `bash process.sh -f arks.txt`.
-- If you do not want to download all of a document, the option `-l` allows you to limit the number of pages.
+    *When you download this prototype, the text file* `arks.txt` *already has Archival Resource Keys that you can use.*
+- If you do not want to download all of a document--and when testing this prototype it is not advisable to download all of a document--the option `-l` allows you to limit the number of pages.
     ```
     $ bash process.sh -f <FILE> -l <LIMIT>
     ```
+### Result
+All that's left is to sit back and watch the images get downloaded into the directory `img/`, then the transcriptions appear in the directory `data/`, and finally the TEI documents to also appear in `data/`.
 
 ## How the Model Is Chosen
 
-1. Figure out what would be the ideal model.
+How does the application determine which segmentation and HTR model to apply without any user input?
+
+1. What would be the ideal model?
+
 
     IIIf manifests usually have data fields that label the document's language(s) and its date(s) of publication. This data is stored in a JSON format.
     
@@ -99,22 +117,13 @@ $ git branch -f dev origin/dev
             }
     }
     ```
-    The python script `scripts/doc_parameters.py` queries the document's IIIF manifest and accesses the first value of the labels "Language" and "Date." To clean the language, the script parses the first two letters and casts them in lower case. It also parses the first two numbers from the date. These two values are then sent to a temporary file: `model_parameters.txt`.
+    The example IIIF manfiest metadata above, for instance, would ideally have models trained on Italian texts from the 15th century. According to this application's file naming syntax, those models would be called `it15seg.mlmodel` for segmentation and `it15htr.mlmodel` for text recognition. By parsing data from the IIIF manifest and transforming it into these ideal models' names, the application then knows what to search for in the collection of models it installed in `models/`.
 
-    ```  
-    it
-    14
-    ```
+2. What are the available models?
+
+    During the installation process, either models were downloaded and named according to the syntax described above (language+century+function) or they were already locally installed on the computer. Because the installation process verifies that the locally installed models adhere to the required syntax, all the models in `models/` are named in a way that reveals for what language and century they are optimized.
     
-    The shell script `scripts/2_transcribe_images.sh` then parses this temporary file and uses its data to construct the name of the ideal models for the document. First, the script checks that the language abbreviation parsed from the IIIF manifest is indeed two lower-case letters. It also checks that date abbreviation is a two-digit integer, and then it increases the number by 1. This summation represents the century in which the document was published.
-
-    With these cleaned data, the ideal models for the document are then recognized as the concatenation of the language abbreviation, century, and the model's function ("seg" or "htr"). The example IIIF manfiest metadata above, for instance, would be parsed by the python and shell scripts and the document's ideal models would be `it15seg.mlmodel` for segmentation and `it15htr.mlmodel` for text recognition.
-
-2. Figure out if that ideal model was installed.
-
-    During the installation process, either models were downloaded and named according to the syntax described above (language+century+function) or they were already locally installed on the computer. The installation process verifies that the locally installed models adhere to the required syntax.
-    
-    In either case, default models are also downloaded during the installation. URLs to download a default segmentation and a default HTR model are assigned to variables `DEFAULTSEG` and `DEFAULTHTR`.
+    Also during the installation process, default models are downloaded into the directory `models/`. The URL to a default segmentation model and the URL to a default HTR model are both given in the file `install.sh`.
 
     
     ```bash
@@ -124,5 +133,6 @@ $ git branch -f dev origin/dev
     # URL for a default htr model
     DEFAULTHTR=https://github.com/Heresta/OCR17plus/raw/main/Model/HTR/dentduchat.mlmodel
     ```
+3. Is the ideal model available?
 
-    Having determined what would be the ideal models to apply to the document, the shell script `2_transcribe_images.sh` checks if the directory `./models/` contains them. Because a strict naming syntax is rigorously applied, if a model trained on data from the same century and language as the document was indeed installed, it will have the same name as what the script determined would be the "ideal model." The shell script applies that ideal model if it finds it in `./models/`. However, if the shell script does not find what it believes is the ideal model, the script applies the default models `defaultseg.mlmodel` and `defaulthtr.mlmodel` in `./models/`.
+    Having determined what would be the ideal models to apply to the document, `scripts/2_transcribe_images.sh` checks if the directory `models/` contains them. If the script finds that it has a file whose name is identical to that of the ideal model, it applies that model to the document. However, if the script does not find what it believes is the ideal model, the script applies the default models `defaultseg.mlmodel` and `defaulthtr.mlmodel`. This automated assessment is possible thanks to the strict file naming syntax applied to the Machine Learning models installed with this application.
