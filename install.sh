@@ -20,13 +20,18 @@
 
 # -----------------------------------------------------------
 
+# URL for a default segmentation model
+DEFAULTSEG=https://github.com/Heresta/OCR17plus/raw/main/Model/Segment/appenzeller.mlmodel
+# URL for a default htr model
+DEFAULTHTR=https://github.com/Heresta/OCR17plus/raw/main/Model/HTR/dentduchat.mlmodel
+
 # Color codes for console messages.
 bold='\033[1m'
 reset='\033[0m'
 inverted="\033[7m"
 red="\033[31m"
-green="\033[42m"
-yellow="\033[43m"
+green="\033[32m"
+yellow="\033[33m"
 
 clear
 echo -e " ._______________________________________________."
@@ -60,9 +65,31 @@ Help()
 }
 
 #####################################################################
+# Generic Virtual Environment Installation
+#####################################################################
+Download()
+{
+    # With name declared in the variable 'output' and the URL declared in variable 'url', download the model.
+    curl -o $output --location --remote-header-name --remote-name $url
+
+    # Check that the download finished correctly.
+    if ! [ -f "./${output}" ]
+    then
+        echo "Exited program."
+        echo -e "${red}Error. Model not downloaded correctly.${reset}\n"
+        exit
+    else
+
+    # Move downloaded model to directory './models/'.
+    mv "./${output}" models/
+    echo -e "${green}Success. Downloaded model as '${output}'.${reset}\n"
+    fi
+}
+
+#####################################################################
 # Download HTR and Segmentation models
 #####################################################################
-Download_Models()
+Parse_CSV()
 {
     # Reset everything in the directories for ML models.
     if [ -d "models" ]
@@ -130,20 +157,9 @@ Download_Models()
         # Download the model from the URL.
         echo -e "${yellow}Requesting model from:${reset} ${url}\n"
         output="${lang}${cent}${job}.mlmodel"
-        curl -o $output --location --remote-header-name --remote-name $url
-
-        # Check that the download finished correctly.
-        if ! [ -f "./${output}" ]
-        then
-            echo "Exited program."
-            echo -e "${red}Error. Model not downloaded correctly.${reset}\n"
-            exit
-        else
-
-        # Move downloaded model to directory './models/'.
-        mv "./${output}" models/
-        echo -e "${green}Success. Downloaded model as '${output}'.${reset}\n"
-        fi
+        
+        # With the output file and URL variables set, download the model. The variable 'url' is derived from the declared name of CSV column.
+        Download
 
     done < <(tail -n +2 $CSV)
     fi
@@ -243,6 +259,30 @@ No_Download()
 #####################################################################
 # Generic Virtual Environment Installation
 #####################################################################
+Default_Models()
+{
+    echo -e "\n${inverted}Downloading default ML models...${reset}\n"
+
+    # Declare the default segmentation model's name in variable 'output'.
+    output=defaultseg.mlmodel
+    # Declare the default segmentation model's URL in variable 'url'.
+    url=$DEFAULTSEG
+    # With the url and output file variables set, download the model.
+    Download
+
+    # Declare the default htr model's name in variable 'output'.
+    output=defaulthtr.mlmodel
+    # Declare the default htr model's URL in variable 'url'.
+    url=$DEFAULTHTR
+    # With the url and output file variables set, download the model.
+    Download
+
+}
+
+
+#####################################################################
+# Generic Virtual Environment Installation
+#####################################################################
 
 # Set up the virtual environment using the requirements file in reqs/.
 Gen_Venv()
@@ -319,7 +359,8 @@ then
 elif [ "$1" = "--file" -o "$1" = "-f" ];
 then
     CSV=$2
-    Download_Models
+    Parse_CSV
+    Default_Models
     Install_Venv
     # Console message to user that the installation process has finished.
     echo -e "\n${inverted}Installation is complete.${reset}"
@@ -329,6 +370,7 @@ elif [ "$1" = "--directory" -o "$1" = "-d" ];
 then
     NODOWNLOAD=$2
     No_Download
+    Default_Models
     Install_Venv
     # Console message to user that the installation process has finished.
     echo -e "\n${inverted}Installation is complete.${reset}"

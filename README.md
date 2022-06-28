@@ -62,6 +62,19 @@ git branch -f dev origin/dev
 ---
 ### Run the Application
 4. Run the application.
-```
-bash process.sh
-```
+
+- In order to know which documents to download and transcribe, the application requires the name of a text file that has all the Archival Resource Keys (ARK) of each document recorded on a new line. The file should resemble this:
+
+    ```
+    bpt6k72609n
+    bpt6k111525t
+    ```
+    And a path to the file should be given after the option `-f`.
+    ```
+    bash process.sh -f <FILE>
+    ```
+    *When you download this prototype, the text file* `arks.txt` *already has models listed for 17th-century French texts that you can use.*
+- If you do not want to download all of a document's pages, the application allows you to limit the number of pages for all the documents. After the option `-l`, enter a number.
+    ```
+    bash process.sh -f <FILE> -l <LIMIT>
+    ```
