@@ -61,7 +61,7 @@ $ git branch -f dev origin/dev
 
 ---
 ### Run the Application
-4. Run the script `process.sh` with its required parameter.
+4. Run the script `process.sh` with its required parameter `-f`.
 
 - In order to know which documents to download and transcribe, the application needs to read a text file. This file should have all the Archival Resource Keys (ARK) of each document recorded, each on a new line. The text file will resemble this:
 
