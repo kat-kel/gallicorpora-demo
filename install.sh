@@ -2,7 +2,22 @@
 
 # -----------------------------------------------------------
 # Code by: Kelly Christensen
-# Bash script to install Gallicopora pipeline's dependencies.
+# Bash script to install Gallicopora pipeline's dependencies and ML models.
+# -----------------------------------------------------------
+
+# Option -h / --help
+# 1. Display the help message.
+
+# Option -f / --file
+# 1. Parse a CSV file that lists ML models to download.
+# 2. Download the models to directory './models/'
+# 3. Install virtual environments in './.venvs/'
+
+# Option -d / --directory
+# 1. Parse files in directory that contains local ML models.
+# 2. Check the model names' syntax and (if they are not already there) copy them to './models/'
+# 3. Install virtual environments in './.venvs/'
+
 # -----------------------------------------------------------
 
 # Color codes for console messages.
@@ -75,7 +90,7 @@ Download_Models()
     # Loop through every model listed in the CSV file.
     while IFS=, read -r lang cent job url
     do
-        # Check the model's function (segmentation or HTR) and display it if it is valid.
+        # Check the model's function (segmentation or HTR). If it is valid, display the model's declared function.
         if [[ "${job}" == "seg" ]]
             then
                 echo "--------------------------------------------"
@@ -86,19 +101,26 @@ Download_Models()
                 echo "Model's function: HTR"
         else
             echo "Exited program."
-            echo -e "${red}Error. The column 'job' in the CSV file contains invalid data (${reset}${job}${red}). Permitted data is either 'seg' (for Segmentation) or 'htr' (for HTR / Handwritten Text Recognition).${reset}\n"
+            echo -e "${red}Error. The column 'job' in the CSV file contains invalid data (${reset} '${job}' ${red}). Permitted data is either 'seg' (for Segmentation) or 'htr' (for HTR / Handwritten Text Recognition).${reset}\n"
             exit
         fi
 
-        # Display the language of the model's training data.
-        echo "Training data's language (abbreviated): ${lang}"
+        # Check the language of the model's training data. If it is valid, display the training data's declared century.
+        if [[ "${lang}" =~ [a-z] ]]
+            then
+                echo "Training data's language (abbreviated): ${lang}"
+        else
+            echo "Exited program."
+            echo -e "${red}Error. The column 'language' in the CSV file contains invalid data (${reset} '${lang}' ${red}). Permitted data is two lower-case letters.${reset}\n"
+            exit
+        fi
 
-        # Check the century of the model's training data and display it if it is two digits.
-        REGEX="^[0-9]{2}$"
-        if ! [[ "${cent}" =~ $REGEX ]]
+        # Check the century of the model's training data. If it is valid, display the training data's declared century.
+        regex="^[0-9]{2}$"
+        if ! [[ "${cent}" =~ $regex ]]
         then
             echo "Exited program."
-            echo -e "${red}Error. The column 'century' in the CSV file contains invalid data (${reset}${cent}${red}). Permitted data is a two-digit integer.${reset}"
+            echo -e "${red}Error. The column 'century' in the CSV file contains invalid data (${reset} '${cent}' ${red}). Permitted data is a two-digit integer.${reset}"
             exit
         else
             echo "Training data's century: ${cent}"
@@ -154,39 +176,76 @@ No_Download()
         mkdir models
     fi
 
-    # Having verified the directory, check if the files inside are all Machine Learning Models.
+    # Having validated the directory, verify the files inside and (if necessary) copy them to the directory './models/'.
     for FILE in $NODOWNLOAD/*; do
-        if ! [[ ${FILE: -8} == ".mlmodel" ]]
+        # To message the user, get the basename of the file being checked and/or copied.
+        filename=`basename $FILE` 
+
+        # Parse the file name's syntax (ex. fr17htr.mlmodel)
+        language=${filename:0:2} # 2 characters starting at position 0 (ex. "fr")
+        century=${filename:2:2} # 2 characters starting at position 2 (ex. "17")
+        job=${filename:4:3} # 3 characters starting at position 4 (ex. "htr")
+
+        # Check if the file is a Machine Learning Model.
+        if ! [[ ${filename: -8} == ".mlmodel" ]]
             then
                 echo "Exited program."
                 echo "${FILE} found in ${NODOWNLOAD}"
                 echo -e "${red}Error. Files found in directory ${NODOWNLOAD} do not have the '.mlmodel' extension and might not be a Machine Learning Model.${reset}\n"
                 exit
-        # If necessary, copy the directory's files to the folder './models/'.
-        else
-        # For a message to the user, get the basename of the file being checked and/or copied.
-        f=`basename $FILE`
-            # Check if the file should be copied.
-            if [ $COPY == true ];
+
+        # Check if the file name's first two characters are letters / the language of its training data.
+        elif ! [[ "${language}" =~ [a-z] ]]
+            then
+            echo "Exited program."
+            echo -e "${red}Error. The first two characters of the model's file name must be two lower-case letters.${reset}"
+            echo "These two letters represent the language of the model's training data. Example file name: fr17htr.mlmodel"
+            echo "The characters '${language}' in file ${filename} are not valid lower-case letters."
+            exit
+
+        # Check if the file name's second two characters are numbers / the century of its training data.
+        elif ! [[ "${century}" =~ [0-9] ]]
+        then
+            echo "Exited program."
+            echo -e "${red}Error. The second two characters of the model's file name must be two digits.${reset}"
+            echo "These two digits represent the century from which the model's training data was taken. Example file name: fr17htr.mlmodel"
+            echo "The characters '${century}' in file ${filename} are not valid digits."
+            exit
+
+        # Check the model's function (segmentation or HTR) and display it if it is valid.
+        elif ! [[ "${job}" == "seg" ]]
+            then
+                if ! [[ "${job}" ==  "htr" ]]
                 then
-                # Copy the validated file to './models/' and inform the user.
-                cp $FILE models/
-                echo "A copy of the file ${f} has been made in the directory './models/'."
-            # Inform the user that the file has been validated but it will not be copied.
-            else
-            echo "The file ${f} is already in the directory ${NODOWNLOAD}."
-            fi
+                    echo "Exited program."
+                    echo -e "${red}Error. The last three characters of the model's file name must be either 'seg' or 'htr'.${reset}"
+                    echo "These two abbreviations represent the job that the model performs, either segmentation (seg) or handwritten text recognition/ocr (htr)."
+                    echo "The characters '${job}' in file ${filename} are not valid."
+                    exit
+                fi
+        fi
+
+        # If necessary, copy the directory's files to the folder './models/'.
+        # Check if the file should be copied.
+        if [ $COPY == true ];
+            then
+            # Copy the validated file to './models/' and inform the user.
+            cp $FILE models/
+            echo "A copy of the file ${filename} has been made in the directory './models/'."
+        # Inform the user that the file has been validated but it will not be copied.
+        else
+        echo "The file ${filename} is already in the directory ${NODOWNLOAD}."
         fi
     done
     fi
 }
 
 #####################################################################
-# Install Virtual Environments
+# Generic Virtual Environment Installation
 #####################################################################
 
 # Set up the virtual environment using the requirements file in reqs/.
-Install_Venv()
+Gen_Venv()
 {
     # create virtual environment
     python3 -m venv ".venvs/${ENV}"
@@ -194,7 +253,7 @@ Install_Venv()
     source ".venvs/${ENV}/bin/activate"
     # upgrade pip and install requirements
     pip install --upgrade pip
-    pip install -r "reqs/${FILE}.txt"
+    pip install -r "reqs/${FILE}"
 
     # check that the all the packages and versions were installed
     REQS=$( cat reqs/${FILE} )
@@ -207,10 +266,42 @@ Install_Venv()
             echo -e "${red}${inverted}See above for differences between the installed packages (.venvs/${ENV}) and the requirements (reqs/${FILE}.txt).${reset}"
             exit
         else
-            echo "Virtual environment ./venvs/${ENV} was successfully installed."
+            echo -e "${green}Virtual environment ./venvs/${ENV} was successfully installed.${reset}"
 		fi
 
     deactivate
+}
+
+#####################################################################
+# Install Each Step's Virtual Environment
+#####################################################################
+Install_Venv()
+{
+    # Erase any preexisting environments in ./venvs
+    echo -e "${inverted}Installing requirements...${reset}"
+    if [ -d ".venvs" ]
+    then
+        rm -r ".venvs"
+    fi
+    mkdir .venvs
+
+    # Set up virtual environment needed for downloading images.
+    echo -e "\n${inverted}... for downloading images from Gallica.${reset}"
+    ENV=download-images
+    FILE=download_requirements.txt
+    Gen_Venv
+
+    # Set up virtual environment needed for transcribing images.
+    echo -e "\n${inverted}... for transcribing images with ML models.${reset}"
+    ENV=transcribe-images
+    FILE=transcribe_requirements.txt
+    Gen_Venv
+
+    # Set up virtual environment needed for making the TEI XML document.
+    echo -e "\n${inverted}... for converting ALTO XML files to TEI XML.${reset}"
+    ENV=alto2tei
+    FILE=alto2tei_requirements.txt
+    Gen_Venv
 }
 
 #####################################################################
@@ -229,43 +320,20 @@ elif [ "$1" = "--file" -o "$1" = "-f" ];
 then
     CSV=$2
     Download_Models
+    Install_Venv
+    # Console message to user that the installation process has finished.
+    echo -e "\n${inverted}Installation is complete.${reset}"
     exit
 # Collect the path to where the user has locally installed the models they want to use.
 elif [ "$1" = "--directory" -o "$1" = "-d" ];
 then
     NODOWNLOAD=$2
     No_Download
+    Install_Venv
+    # Console message to user that the installation process has finished.
+    echo -e "\n${inverted}Installation is complete.${reset}"
     exit
 else
     break
 fi
 done
-
-# Erase any preexisting environments in ./venvs
-echo -e "${inverted}Installing requirements...${reset}"
-if [ -d ".venvs" ]
-then
-    rm -r ".venvs"
-fi
-mkdir .venvs
-
-# Set up virtual environment needed for downloading images.
-echo -e "\n${inverted}... for downloading images from Gallica.${reset}"
-ENV=download-images
-FILE=download_requirements
-Install_Venv
-
-# Set up virtual environment needed for transcribing images.
-echo -e "\n${inverted}... for transcribing images with ML models.${reset}"
-ENV=transcribe-images
-FILE=transcribe_requirements
-Install_Venv
-
-# Set up virtual environment needed for making the TEI XML document.
-echo -e "\n${inverted}... for converting ALTO XML files to TEI XML.${reset}"
-ENV=alto2tei
-FILE=alto2tei_requirements
-Install_Venv
-
-# Console message to user that the installation process has finished.
-echo -e "\n${inverted}Installation is complete.${reset}"
