@@ -83,7 +83,9 @@ $ git branch -f dev origin/dev
 
 1. Figure out what would be the ideal model.
 
-    IIIf manifests usually have a data field that labels the document's language(s) and its date of publication. This data is stored in a JSON format.
+    IIIf manifests usually have data fields that label the document's language(s) and its date(s) of publication. This data is stored in a JSON format.
+
+    `IIIF manifest`
     ```
     metadata:
         label:  "Language"
@@ -91,22 +93,31 @@ $ git branch -f dev origin/dev
         label:  "Date"
         value:  "1425-1450"
     ```
-    The python script `scripts/doc_parameters.py` queries the document's IIIF manifest and accesses the first value of the labels "Language" and "Date." The first two characters of each of these parameters are parsed and prepared. The language's first two letters are recast in lower case. And the first two numbers of the date of publication are treated as an integer and increased by 1.
+    The python script `scripts/doc_parameters.py` queries the document's IIIF manifest and accesses the first value of the labels "Language" and "Date." To clean the language, the script parses the first two letters and casts them in lower case. It also parses the first two numbers from the date. These two values are then sent to a temporary file: `model_parameters.txt`.
 
-    In order to construct the name of an ideal model, the document's two key parameters are then concatenated before either "seg" or "htr," depending on what the model is designed to do. The example IIIF manfiest metadata above, for instance, would be parsed by the python script and the document's ideal models would be `it15seg.mlmodel` for segmentation and `it15htr.mlmodel` for text recognition.
+    `model_parameters.txt`
+    ```    
+    it
+    14
+    ```
+    
+    The shell script `scripts/2_transcribe_images.sh` then parses this temporary file and uses its data to construct the name of the ideal models for the document. First, the script checks that the language abbreviation parsed from the IIIF manifest is indeed two lower-case letters. It also checks that date abbreviation is a two-digit integer, and then it increases the number by 1. This summation represents the century in which the document was published.
+
+    With these cleaned data, the ideal models for the document are then recognized as the concatenation of the language abbreviation, century, and the model's function ("seg" or "htr"). The example IIIF manfiest metadata above, for instance, would be parsed by the python and shell scripts and the document's ideal models would be `it15seg.mlmodel` for segmentation and `it15htr.mlmodel` for text recognition.
 
 2. Figure out if that ideal model was installed.
 
-    During the installation process, either models were downloaded and named according to the syntax described above (language+century+function) or they were already locally installed on the computer and named according to the syntax. Even if local models were used (and their syntax was verified during the installation process), default models were also downloaded.
-
-    After examining the IIIF manifest, the shell script `2_transcribe_images.sh` checks if the directory `./models/` contains what `scripts/doc_parameters.py` had determined was the ideal model to use. If that model has been installed, it is applied. If that model is not found in the directory `./models/`, the default models are applied. Default models are downloaded during the installation process and named `defaultseg.mlmodel` and `defaulthtr.mlmodel`. 
+    During the installation process, either models were downloaded and named according to the syntax described above (language+century+function) or they were already locally installed on the computer. The installation process verifies that the locally installed models adhere to the required syntax.
     
-    >To see from where the default models were downloaded, go to the first non-commented lines in the shell script `install.sh`.
+    In either case, default models are also downloaded during the installation. URLs to download a default segmentation and a default HTR model are assigned to variables `DEFAULTSEG` and `DEFAULTHTR`.
 
+    `install.sh`
     ```
     # URL for a default segmentation model
     DEFAULTSEG=https://github.com/Heresta/OCR17plus/raw/main/Model/Segment/appenzeller.mlmodel
-    
+
     # URL for a default htr model
     DEFAULTHTR=https://github.com/Heresta/OCR17plus/raw/main/Model/HTR/dentduchat.mlmodel
     ```
+
+    Having determined what would be the ideal models to apply to the document, the shell script `2_transcribe_images.sh` checks if the directory `./models/` contains them. Because a strict naming syntax is rigorously applied, if a model trained on data from the same century and language as the document was indeed installed, it will have the same name as what the script determined would be the "ideal model." The shell script applies that ideal model if it finds it in `./models/`. However, if the shell script does not find what it believes is the ideal model, the script applies the default models `defaultseg.mlmodel` and `defaulthtr.mlmodel` in `./models/`.
