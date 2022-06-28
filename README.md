@@ -65,7 +65,7 @@ $ git branch -f dev origin/dev
 
 - In order to know which documents to download and transcribe, the application needs to read a text file. This file should have all the Archival Resource Keys (ARK) of each document recorded, each on a new line. The text file will resemble this:
 
-    ```
+    ```  
     bpt6k72609n
     bpt6k111525t
     ```
@@ -84,19 +84,24 @@ $ git branch -f dev origin/dev
 1. Figure out what would be the ideal model.
 
     IIIf manifests usually have data fields that label the document's language(s) and its date(s) of publication. This data is stored in a JSON format.
-
-    `IIIF manifest`
-    ```
-    metadata:
-        label:  "Language"
-        value:  "Italian"
-        label:  "Date"
-        value:  "1425-1450"
+    
+    ```json
+    
+    {
+        "metadata":
+            {
+            "label":  "Language",
+            "value":  "Italian"
+            },
+            {
+            "label":  "Date",
+            "value":  "1425-1450"
+            }
+    }
     ```
     The python script `scripts/doc_parameters.py` queries the document's IIIF manifest and accesses the first value of the labels "Language" and "Date." To clean the language, the script parses the first two letters and casts them in lower case. It also parses the first two numbers from the date. These two values are then sent to a temporary file: `model_parameters.txt`.
 
-    `model_parameters.txt`
-    ```    
+    ```  
     it
     14
     ```
@@ -111,8 +116,8 @@ $ git branch -f dev origin/dev
     
     In either case, default models are also downloaded during the installation. URLs to download a default segmentation and a default HTR model are assigned to variables `DEFAULTSEG` and `DEFAULTHTR`.
 
-    `install.sh`
-    ```
+    
+    ```bash
     # URL for a default segmentation model
     DEFAULTSEG=https://github.com/Heresta/OCR17plus/raw/main/Model/Segment/appenzeller.mlmodel
 
