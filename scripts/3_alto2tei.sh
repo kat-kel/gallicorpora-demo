@@ -70,7 +70,7 @@ Activate_Venv
 echo -e "${yellow}Virtual environment '${ENV}' activated.${reset}"
 
 # Run the application alto2tei.
-python 3_alto2tei/run.py
+python scripts/alto2tei.py
 
 # Deactivate the virtual environment for creating the TEI document.
 deactivate

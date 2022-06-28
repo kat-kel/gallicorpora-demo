@@ -98,7 +98,7 @@ do
  		# Script from https://github.com/carolinecorbieres/Memoire_TNAH/tree/master/2_Workflow/1_ImportCatalogues
  		# by Simon Gabay and Caroline Corbières.
  		# I have modified the script's options by adding "-e", which allows us to specify the export location.
- 		python 1_download_images/import_iiif.py ark:/12148/$ARK $LIMIT -e img
+ 		python scripts/import_iiif.py ark:/12148/$ARK $LIMIT -e img
  		ENDTIME=$(date +%s)
 		COUNT=`ls ./img/${ARK} | wc -l`
  		echo -e "${green}${COUNT} pages were downloaded in $(($ENDTIME - $STARTTIME)) seconds.${reset}"

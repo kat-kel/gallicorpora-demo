@@ -84,7 +84,8 @@ Choose_Model()
 	idealseg="${LANGUAGE}${CENT}seg.mlmodel"
 	# Based on the document's parameters, the ideal htr model would be:
 	idealhtr="${LANGUAGE}${CENT}htr.mlmodel"
-	echo "Ideally, this document would be segmented with model '${idealseg}', and its text would be predicted with model '${idealhtr}'."
+	echo "Ideal segmentation model: ${idealseg}"
+	echo "Ideal text recognition model: ${idealhtr}"
 
 	# If the ideal segmentation model is in the directory './models/', set it as the SEG variable.
 	if [[ -f ./models/${idealseg} ]]
@@ -119,14 +120,14 @@ do
 	echo -e "\n${inverted}Segmenting and transcribing images from document ${ARK}.${reset}"
 
 	# Get information on the document's language and date from its IIIF manifest.
-    python 2_transcribe_images/doc_parameters.py $ARK > model_parameters.txt
+    python scripts/doc_parameters.py $ARK > model_parameters.txt
 
 	# Determine which language model to use for this document.
 	Choose_Model
 
 	# Apply the selected models.
 	cd "img/$ARK"
-	echo "The document is being segmented with '${SEG}' and the text is being predicted with '${HTR}'..."
+	echo -e "The document is being segmented with '${SEG}' and the text is being predicted with '${HTR}'...\n"
     kraken --alto --suffix ".xml" -I "*.jpg" -f image segment -i "../../models/$SEG" -bl ocr -m "../../models/$HTR"
 	cd -
 
