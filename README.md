@@ -78,3 +78,35 @@ $ git branch -f dev origin/dev
     ```
     $ bash process.sh -f <FILE> -l <LIMIT>
     ```
+
+## How the Model Is Chosen
+
+1. Figure out what would be the ideal model.
+
+    IIIf manifests usually have a data field that labels the document's language(s) and its date of publication. This data is stored in a JSON format.
+    ```
+    metadata:
+        label:  "Language"
+        value:  "Italian"
+        label:  "Date"
+        value:  "1425-1450"
+    ```
+    The python script `scripts/doc_parameters.py` queries the document's IIIF manifest and accesses the first value of the labels "Language" and "Date." The first two characters of each of these parameters are parsed and prepared. The language's first two letters are recast in lower case. And the first two numbers of the date of publication are treated as an integer and increased by 1.
+
+    In order to construct the name of an ideal model, the document's two key parameters are then concatenated before either "seg" or "htr," depending on what the model is designed to do. The example IIIF manfiest metadata above, for instance, would be parsed by the python script and the document's ideal models would be `it15seg.mlmodel` for segmentation and `it15htr.mlmodel` for text recognition.
+
+2. Figure out if that ideal model was installed.
+
+    During the installation process, either models were downloaded and named according to the syntax described above (language+century+function) or they were already locally installed on the computer and named according to the syntax. Even if local models were used (and their syntax was verified during the installation process), default models were also downloaded.
+
+    After examining the IIIF manifest, the shell script `2_transcribe_images.sh` checks if the directory `./models/` contains what `scripts/doc_parameters.py` had determined was the ideal model to use. If that model has been installed, it is applied. If that model is not found in the directory `./models/`, the default models are applied. Default models are downloaded during the installation process and named `defaultseg.mlmodel` and `defaulthtr.mlmodel`. 
+    
+    >To see from where the default models were downloaded, go to the first non-commented lines in the shell script `install.sh`.
+
+    ```
+    # URL for a default segmentation model
+    DEFAULTSEG=https://github.com/Heresta/OCR17plus/raw/main/Model/Segment/appenzeller.mlmodel
+    
+    # URL for a default htr model
+    DEFAULTHTR=https://github.com/Heresta/OCR17plus/raw/main/Model/HTR/dentduchat.mlmodel
+    ```
