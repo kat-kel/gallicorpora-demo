@@ -13,7 +13,7 @@ Through an automated process, this application applies segmentation and HTR mode
 These specialized models can be either public and downloaded from the internet via a URL (see `model_list.csv`), or models the user has available locally on their computer. During the installation process, the user specifies from where the application will install the models it will use. All models used by the application must conform to a strict file name syntax that allows the application to automatically determine which model to apply, depending on a document's language and date of publication.
 
 ### Step 3. TEI Document
-Requiring no further input form the user, the application transforms the data which the segmentation and HTR models produced into a digital TEI edition. This digital edition can then be manipulated and published with such tools as TEI Publisher. 
+Requiring no further input from the user, the application transforms the data which the segmentation and HTR models produced into a digital TEI edition. This digital edition can then be manipulated and published with such tools as TEI Publisher. 
 
 ## **How to Use It**
 ___
