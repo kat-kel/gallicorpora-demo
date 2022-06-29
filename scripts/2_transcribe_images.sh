@@ -79,13 +79,23 @@ Choose_Model()
 	LANGUAGE=$(head -n 1 ${PARAMS})
 	DATE=$(tail -n 1 ${PARAMS})
 
+	# Set variable for document's century.
+	regex="^[0-9]{2}$"
+	# if the IIIF manifest did not provide a numerical value for the date of publication,
+	if ! [[ "${DATE}" =~ $regex ]]
+	# then set the century to "00";
+	then
+		CENT="00"
+	# otherwise, derive the century by adding 1 to the date of publication
+	else
+		CENT=$((DATE+1))
+
 	# Based on the document's parameters, the ideal segmentation model would be:
-	CENT=$((DATE+1))
 	idealseg="${LANGUAGE}${CENT}seg.mlmodel"
 	# Based on the document's parameters, the ideal htr model would be:
 	idealhtr="${LANGUAGE}${CENT}htr.mlmodel"
-	echo "Ideal segmentation model: ${idealseg}"
-	echo "Ideal text recognition model: ${idealhtr}"
+	echo "The language detected for this document was: ${LANGUAGE}"
+	echo "The century detected for this document was: ${CENT}"
 
 	# If the ideal segmentation model is in the directory './models/', set it as the SEG variable.
 	if [[ -f ./models/${idealseg} ]]
