@@ -89,6 +89,7 @@ Choose_Model()
 	# otherwise, derive the century by adding 1 to the date of publication
 	else
 		CENT=$((DATE+1))
+	fi
 
 	# Based on the document's parameters, the ideal segmentation model would be:
 	idealseg="${LANGUAGE}${CENT}seg.mlmodel"
