@@ -1,3 +1,4 @@
 .DS_Store
 .venvs
 .testing-env
+scripts/src/__pycache__/
