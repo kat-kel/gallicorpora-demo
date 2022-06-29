@@ -10,7 +10,7 @@ from src.write_output import Write
 
 
 # from the project's configuration YAML, parse where it says to find the ALTO files' directories
-with open("3_alto2tei/src/config.yml") as cf_file:
+with open("scripts/src/config.yml") as cf_file:
         config = yaml.safe_load(cf_file.read())
         p = Path(config.get(("data"))["path"])
 
