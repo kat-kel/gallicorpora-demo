@@ -1,5 +1,14 @@
 # Gallic(orpor)a Application
 
+---
+### *Quick! I already have the app installed. How do I use it right now?*
+```
+bash install.sh -f model_list.csv
+```
+```
+bash process.sh -f arks.txt -l 10
+```
+
 ## **What It Does**
 ___
 The Gallic(orpor)a Application downloads digital images of pages from a document on Gallica, transcribes them with Machine Learning models, and structures that transcribed data into a digital edition that conforms to the TEI (Text Encoding Initiative).
