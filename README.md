@@ -3,7 +3,7 @@
 ---
 ### *Quick! I already have the app installed. How do I use it right now?*
 ```
-bash install.sh -f model_list.csv
+bash install.sh -f your_models.csv
 ```
 ```
 bash process.sh -f arks.txt -l 10
@@ -38,7 +38,6 @@ $ git clone https://github.com/kat-kel/gallicorpora-demo.git
 2. Move into this repository (go to the dev branch).
 ```
 $ cd gallicorpora-demo
-$ git branch -f dev origin/dev
 ```
 ---
 ### Set up the Application
