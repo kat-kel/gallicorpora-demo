@@ -57,6 +57,21 @@ Activate_Venv()
 }
 
 ##############################################################
+# Get the version of Kraken
+##############################################################
+# Search for kraken in a requirements file and store the match without the file name.
+KRAKEN=`grep -Eho 'kraken==([\.|0-9]+)' reqs/*`
+
+# Check that the version number was found in the grep result.
+regex="[\.|0-9]+"
+if [[ $KRAKEN =~ $regex ]]
+    # Subtract "kraken==" from the string, leaving only the version number.
+    then
+    VERSION=`grep -Eho 'kraken==([\.|0-9]+)' reqs/* | sed 's/kraken==//'`
+fi
+echo $VERSION
+
+##############################################################
 # Main Program
 ##############################################################
 echo -e "\n${inverted}Phase 3. Convert transcribed ALTO XML files to a TEI XML document.${reset}"
@@ -70,7 +85,7 @@ Activate_Venv
 echo -e "${yellow}Virtual environment '${ENV}' activated.${reset}"
 
 # Run the application alto2tei.
-python scripts/alto2tei.py
+python scripts/alto2tei.py --config config.yml --version $VERSION --header --sourcedoc --body
 
 # Deactivate the virtual environment for creating the TEI document.
 deactivate

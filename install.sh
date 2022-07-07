@@ -21,9 +21,9 @@
 # -----------------------------------------------------------
 
 # URL for a default segmentation model
-DEFAULTSEG=https://github.com/Heresta/OCR17plus/raw/main/Model/Segment/appenzeller.mlmodel
+#DEFAULTSEG=https://traces6.paris.inria.fr/media/models/7ea0421c/segmontocorpussegmentation_finetune_best.mlmodel
 # URL for a default htr model
-DEFAULTHTR=https://github.com/Heresta/OCR17plus/raw/main/Model/HTR/dentduchat.mlmodel
+#DEFAULTHTR=https://traces6.paris.inria.fr/media/models/dee69a4c/gallicorpora_best.mlmodel
 
 # Color codes for console messages.
 bold='\033[1m'
@@ -257,11 +257,15 @@ No_Download()
 }
 
 #####################################################################
-# Generic Virtual Environment Installation
+# Install default models
 #####################################################################
 Default_Models()
 {
     echo -e "\n${inverted}Downloading default ML models...${reset}\n"
+
+    . default_models.yml
+    DEFAULTSEG=$Default_Segmentation
+    DEFAULTHTR=$Default_HTR
 
     # Declare the default segmentation model's name in variable 'output'.
     output=defaultseg.mlmodel
