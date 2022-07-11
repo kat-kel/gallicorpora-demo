@@ -58,7 +58,7 @@ There are 2 ways to install the Machine Learning models that this application ne
 
     2. With the `your_models.csv` prepared, launch the installation with the option `-f` and the path to the CSV file.
         ```
-        $ bash install.sh -f model_list.csv
+        $ bash install.sh -f your_models.csv
         ```
 
 - **OPTION 2.** If you have Machine Learning models installed on your local machine, follow these two steps:
