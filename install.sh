@@ -60,7 +60,7 @@ Help()
 }
 
 #####################################################################
-# Generic Virtual Environment Installation
+# Generic Script ot Download Models
 #####################################################################
 Download()
 {
@@ -280,14 +280,14 @@ Default_Models()
 
 
 #####################################################################
-# Generic Virtual Environment Installation
+# Generic Script to Install Virtual Environments
 #####################################################################
 
 # Set up the virtual environment using the requirements file in reqs/.
 Gen_Venv()
 {
     # create virtual environment
-    python3 -m venv ".venvs/${ENV}"
+    python3.9 -m venv ".venvs/${ENV}"
     # activate virtual environment
     source ".venvs/${ENV}/bin/activate"
     # upgrade pip and install requirements

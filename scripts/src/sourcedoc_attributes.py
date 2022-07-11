@@ -73,7 +73,6 @@ class Attributes:
                     # parse the three (possible) components of the targeted ALTO element's @TAGREFS, according to SegmOnto guidelines;
                     # the 3 groups of this regex parse the following expected tag syntax: MainZone:column#1 --> (MainZone)(column)(1)
                     tag_parts = re.match(r"(\w+):?(\w+)?#?(\d?)?", tag)
-                    # Recast the first letter of the type in lower case, in accordance with TEI standards
                     data.attributes["type"]=tag_parts.group(1) or "none"
                     main_type =  data.attributes["type"]
                     if segmonto_labels is not None and main_type in segmonto_labels:
@@ -83,9 +82,9 @@ class Attributes:
 
                 # If XML element does not have attribute @TAGREFS (aka, is a segment/space/glyph), assign it a type
                 else:
-                    main_type = etree.QName(element).localname[0].lower() + etree.QName(element).localname[1:]
-                    if main_type=="sP":
-                        main_type="space"
+                    main_type = etree.QName(element).localname
+                    if main_type=="SP":
+                        main_type="Space"
                     data.attributes["type"]=main_type
                     #print(main_type)
 

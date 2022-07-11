@@ -38,8 +38,5 @@ class TEI:
         sourcedoc(self.d, self.root, self.fp, self.tags, self.segmonto_zones, self.segmonto_lines)
 
     def build_body(self):
-        if self.root.find('.//c') is not None:
-            print("Text data for <body> is not yet ready for this type of document.")
-        else:
-            text = Text(self.root)
-            body(self.root, text.data)
+        text = Text(self.root)
+        body(self.root, text.data)

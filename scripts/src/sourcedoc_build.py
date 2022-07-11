@@ -70,15 +70,17 @@ def sourcedoc(document_name, output_tei_root, filepath_list, tags, segmonto_zone
                 if tl.id:
                     lines_on_page+=1
                     textline = surface_tree.zone2(textblock, tb.id, tl.attributes, tl.id, lines_on_page)
+                    words = ""
 
                     # If <TextLine> has child <String> that has all the line's textual content, map that to the TEI element <line>.
                     if input_alto_root.find(f'.//a:TextLine[@ID="{tl.id}"]/a:String', namespaces=NS).get("CONTENT") is not None\
                         and len(input_alto_root.find(f'.//a:TextLine[@ID="{tl.id}"]/a:String', namespaces=NS).getchildren()) == 0:
                         # Map the textual data to the TEI element <line>.
-                        surface_tree.line(textline, tb.id, tl.id, lines_on_page)
+                        surface_tree.line(textline, tb.id, tl.id, lines_on_page, None)
                     
                     # If the line's textual content is expressed at the level of glyphs, map that textual data to TEI element <c>.
                     elif input_alto_root.find(f'.//a:TextLine[@ID="{tl.id}"]/a:String', namespaces=NS).get("CONTENT") is not None\
+                        and input_alto_root.find(f'.//a:TextLine[@ID="{tl.id}"]/a:String', namespaces=NS).get("CONTENT") != ""\
                         and len(input_alto_root.find(f'.//a:TextLine[@ID="{tl.id}"]/a:String', namespaces=NS).getchildren()) > 0:
 
                         # Loop through all the <String> or <SP> children of a <TextLine>
@@ -101,12 +103,19 @@ def sourcedoc(document_name, output_tei_root, filepath_list, tags, segmonto_zone
 
                                 # Loop through all the <Glyph> children of a <String>
                                 string_children = input_alto_root.findall(f'.//a:String[@ID="{textline_child_id}"]/a:Glyph', namespaces=NS)
+                                if words == "":
+                                    words = words + "".join([g.get("CONTENT") for g in string_children])
+                                else:
+                                    words = words + " " + "".join([g.get("CONTENT") for g in string_children])
+                                    
                                 for glyph_child in string_children:
                                     glyph_id = glyph_child.attrib["ID"]
                                     glyph_data = attributes.zones(f'String[@ID="{textline_child_id}"]', f'Glyph[@ID="{glyph_id}"]', None)[0]
                                     glyphs_on_page+=1
                                     glyph = surface_tree.zone4(string, tb.id, tl.id, textline_child_id, glyph_data.attributes, glyph_id, glyphs_on_page)
                                     surface_tree.car(glyph, glyph_child, tb.id, tl.id, textline_child_id, glyph_id, glyphs_on_page)
+
+                        surface_tree.line(textline, tb.id, tl.id, lines_on_page, words)
   
     return output_tei_root
     
