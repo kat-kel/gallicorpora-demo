@@ -20,11 +20,6 @@
 
 # -----------------------------------------------------------
 
-# URL for a default segmentation model
-#DEFAULTSEG=https://traces6.paris.inria.fr/media/models/7ea0421c/segmontocorpussegmentation_finetune_best.mlmodel
-# URL for a default htr model
-#DEFAULTHTR=https://traces6.paris.inria.fr/media/models/dee69a4c/gallicorpora_best.mlmodel
-
 # Color codes for console messages.
 bold='\033[1m'
 reset='\033[0m'

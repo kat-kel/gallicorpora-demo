@@ -22,12 +22,13 @@ def labels(filepath):
     return tags
 
 
-def sourcedoc(document_name, output_tei_root, filepath_list, tags):
+def sourcedoc(document_name, output_tei_root, filepath_list, tags, segmonto_zones, segmonto_lines):
     """Creates the <sourceDoc> for an XML-TEI file using data parsed from a series of ALTO files.
         The <sourceDoc> collates each ALTO file, which represents one page of a document, into a wholistic
         description of the document.
     """
-    
+
+
     ordered_files = Files(document_name, filepath_list).order_files()
     
     # Create <sourceDoc> and its child <surfaceGrp>.
@@ -55,14 +56,14 @@ def sourcedoc(document_name, output_tei_root, filepath_list, tags):
 
         # -- TEXTBLOCK --
         # For every <TextBlock> in a <PrintSpace>, create a <zone> and assign it attributes.
-        textblocks = attributes.zones("PrintSpace", "TextBlock")
+        textblocks = attributes.zones("PrintSpace", "TextBlock", segmonto_zones)
         for tb in textblocks:
             # Only map the <TextBlock> to the XML-TEI tree if its @ID was found.
             if tb.id:
                 blocks_on_page+=1
                 textblock = surface_tree.zone1(surface, tb.attributes, tb.id, blocks_on_page)
 
-            textlines = attributes.zones(f'TextBlock[@ID="{tb.id}"]', "TextLine")
+            textlines = attributes.zones(f'TextBlock[@ID="{tb.id}"]', "TextLine", segmonto_lines)
             # "tl" concerns <TextLine> and its descendant <Polygon>
             for tl in textlines:
                 # Only map the <TextLine> to the XML-TEI tree if its @ID was found.
@@ -87,14 +88,14 @@ def sourcedoc(document_name, output_tei_root, filepath_list, tags):
                             # If child of <TextLine> is a space <SP>
                             if etree.QName(textline_child).localname == "SP":
                                 textline_child_id = textline_child.attrib["ID"]
-                                space_data = attributes.zones(f'TextLine[@ID="{tl.id}"]', f'SP[@ID="{textline_child_id}"]')[0]
+                                space_data = attributes.zones(f'TextLine[@ID="{tl.id}"]', f'SP[@ID="{textline_child_id}"]', None)[0]
                                 strings_on_page+=1
                                 surface_tree.zone3(textline, tb.id, tl.id, space_data.attributes, space_data.id, strings_on_page)
 
                             # If a child of <TextLine> is a segment of text <String>
                             elif etree.QName(textline_child).localname == "String":
                                 textline_child_id = textline_child.attrib["ID"]
-                                string_data = attributes.zones(f'TextLine[@ID="{tl.id}"]', f'String[@ID="{textline_child_id}"]')[0]
+                                string_data = attributes.zones(f'TextLine[@ID="{tl.id}"]', f'String[@ID="{textline_child_id}"]', None)[0]
                                 strings_on_page+=1
                                 string = surface_tree.zone3(textline, tb.id, tl.id, string_data.attributes, string_data.id, strings_on_page)
 
@@ -102,7 +103,7 @@ def sourcedoc(document_name, output_tei_root, filepath_list, tags):
                                 string_children = input_alto_root.findall(f'.//a:String[@ID="{textline_child_id}"]/a:Glyph', namespaces=NS)
                                 for glyph_child in string_children:
                                     glyph_id = glyph_child.attrib["ID"]
-                                    glyph_data = attributes.zones(f'String[@ID="{textline_child_id}"]', f'Glyph[@ID="{glyph_id}"]')[0]
+                                    glyph_data = attributes.zones(f'String[@ID="{textline_child_id}"]', f'Glyph[@ID="{glyph_id}"]', None)[0]
                                     glyphs_on_page+=1
                                     glyph = surface_tree.zone4(string, tb.id, tl.id, textline_child_id, glyph_data.attributes, glyph_id, glyphs_on_page)
                                     surface_tree.car(glyph, glyph_child, tb.id, tl.id, textline_child_id, glyph_id, glyphs_on_page)

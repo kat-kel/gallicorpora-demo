@@ -85,7 +85,7 @@ Activate_Venv
 echo -e "${yellow}Virtual environment '${ENV}' activated.${reset}"
 
 # Run the application alto2tei.
-python scripts/alto2tei.py --config config.yml --version $VERSION --header --sourcedoc --body
+python scripts/alto2tei.py --config config.yml --version $VERSION --header --sourcedoc #--body
 
 # Deactivate the virtual environment for creating the TEI document.
 deactivate
