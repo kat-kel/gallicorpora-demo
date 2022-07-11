@@ -19,7 +19,7 @@ Researchers develop Machine Learning models that segment pages of text documents
 
 Through an automated process, this application applies segmentation and HTR models that best conform to the type of document being transcribed. It first assesses what would be the best type of segmentation and HTR models for a given document, based on that document's date of publication and language. The application then determines if anything it has installed matches those ideal models. To best take advantage of this application, the user should install it with segmentation and HTR models that are well suited to the type of documents whose Archival Resources Keys the user provides.
 
-These specialized models can be either public and downloaded from the internet via a URL (see `model_list.csv`), or models the user has available locally on their computer. During the installation process, the user specifies from where the application will install the models it will use. All models used by the application must conform to a strict file name syntax that allows the application to automatically determine which model to apply, depending on a document's language and date of publication.
+These specialized models can be either public and downloaded from the internet via a URL (see `your_models.csv`), or models the user has available locally on their computer. During the installation process, the user specifies from where the application will install the models it will use. All models used by the application must conform to a strict file name syntax that allows the application to automatically determine which model to apply, depending on a document's language and date of publication.
 
 ### Step 3. TEI Document
 Requiring no further input from the user, the application transforms the data which the segmentation and HTR models produced into a digital TEI edition. This digital edition can then be manipulated and published with such tools as TEI Publisher. 
@@ -47,16 +47,16 @@ There are 2 ways to install the Machine Learning models that this application ne
 
 - **OPTION 1.** If you want to download Machine Learning models from an online repository (GitHub, Zenodo, HuggingFace, etc.), follow these two steps:
 
-    1. In the file `model_list.csv`, write the URL and some information about what the model does. That informaiton includes the training data's language, the training data's century, and the model's task: segmentation (seg) or handwritten text recognition/ocr (htr). The URL needs to be the exact URL that triggers the model's download (not simply the page on which that URL can be accessed).
+    1. In the file `your_models.csv`, write the URL and some information about what the model does. That informaiton includes the training data's language, the training data's century, and the model's task: segmentation (seg) or handwritten text recognition/ocr (htr). The URL needs to be the exact URL that triggers the model's download (not simply the page on which that URL can be accessed).
 
         |language|century|job|url|
         |--------|-------|---|---|
         |fr|17|seg|https://github.com/...mlmodel|
         |fr|17|htr|https://github.com/...mlmodel|
 
-        *When you download this prototype,* `model_list.csv` *already has models listed for 17th-century French texts that are ready for you to use.*
+        *When you download this prototype,* `your_models.csv` *already has models listed for 17th-century French texts that are ready for you to use.*
 
-    2. With the `model_list.csv` prepared, launch the installation with the option `-f` and the path to the CSV file.
+    2. With the `your_models.csv` prepared, launch the installation with the option `-f` and the path to the CSV file.
         ```
         $ bash install.sh -f model_list.csv
         ```
